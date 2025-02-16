@@ -1,7 +1,7 @@
 if not game:IsLoaded() then game.Loaded:Wait() end
 if game.PlaceId == 15536298749 then
 
-    local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/iagocno/Dominator/main/source"))()
+    local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/iagocno/Dominator/refs/heads/main/source"))()
     
     -- Criar a Janela
     local Window = lib:CreateWindow("Dominator UI")
