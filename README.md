@@ -1,41 +1,58 @@
-if not game:IsLoaded() then
-    game.Loaded:Wait()
+if not game:IsLoaded() then game.Loaded:Wait() end
+if game.PlaceId == 15536298749 then
+
+    -- Carrega a biblioteca externa que você mencionou
+    local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/iagocno/Dominator/refs/heads/main/source"))()
+
+    -- Cria a janela principal com o título
+    local Window = lib:CreateWindow("Meu Script")
+
+    -- Cria as abas que você pediu
+    local Home = Window:NewTab("Home")
+    local AutoFarm = Window:NewTab("Auto Farm")
+    local Misc = Window:NewTab("Misc")
+
+    -- Adiciona as seções nas abas
+    local Info = Home:AddSection("Informações")
+    local Discord = Home:AddSection("Discord")
+    local Farm = AutoFarm:AddSection("Farm")
+    local Others = Misc:AddSection("Extras")
+
+    -- Seção de informações
+    Info:AddButton("Nome: " .. game.Players.LocalPlayer.Name, "Nome de Usuário", function() end)
+    Info:AddButton("ID: " .. game.Players.LocalPlayer.UserId, "ID do jogador", function() end)
+    Info:AddButton("Executor: " .. identifyexecutor(), "Executor usado", function() end)
+
+    -- Seção do Discord
+    Discord:AddButton("Discord", "Entrar no servidor", function()
+        setclipboard("https://discord.gg/seuconvite")
+    end)
+
+    -- Seção de AutoFarm
+    Farm:AddToggle("Auto Collect Coins", "Coletar moedas automaticamente", false, function(state)
+        getgenv().AutoCollect = state
+        while getgenv().AutoCollect do
+            task.wait(0.1)
+            for _, v in pairs(workspace:GetDescendants()) do
+                if v.Name:lower() == "coins" and v:IsA("BasePart") then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
+                end
+            end
+        end
+    end)
+
+    -- Seção de Misc
+    Others:AddButton("AntiAFK", "Ativar", function()
+        game:GetService("Players").LocalPlayer.Idled:Connect(function()
+            local VirtualUser = game:GetService("VirtualUser")
+            VirtualUser:CaptureController()
+            VirtualUser:ClickButton2(Vector2.new())
+        end)
+    end)
+    
+    Others:AddButton("FPS Booster", "Reduzir lag", function()
+        sethiddenproperty(game.Lighting, "Technology", 2)
+        game.Lighting.FogEnd = 9e9
+    end)
+
 end
-
-local cloneref = cloneref or function(...) return ... end
-local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/iagocno/Dominator/main/source"))()
-local Window = lib:CreateWindow("Meu Script")
-
-local Home = Window:NewTab("Home")
-local Main = Window:NewTab("Main")
-local Credits = Window:NewTab("Créditos")
-
-local Info = Instance.new("TextLabel", Home)
-Info.Text = "Bem-vindo ao script!"
-Info.Size = UDim2.new(0, 200, 0, 50)
-Info.Position = UDim2.new(0.5, -100, 0.2, 0)
-Info.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-local ToggleMain = Instance.new("TextButton", Home)
-ToggleMain.Text = "Ir para Main"
-ToggleMain.Size = UDim2.new(0, 100, 0, 30)
-ToggleMain.Position = UDim2.new(0.5, -50, 0.4, 0)
-ToggleMain.MouseButton1Click:Connect(function()
-    Window:SwitchTab("Main")
-end)
-
-local ToggleCredits = Instance.new("TextButton", Main)
-ToggleCredits.Text = "Ir para Créditos"
-ToggleCredits.Size = UDim2.new(0, 100, 0, 30)
-ToggleCredits.Position = UDim2.new(0.5, -50, 0.4, 0)
-ToggleCredits.MouseButton1Click:Connect(function()
-    Window:SwitchTab("Créditos")
-end)
-
-local BackToHome = Instance.new("TextButton", Credits)
-BackToHome.Text = "Voltar ao Home"
-BackToHome.Size = UDim2.new(0, 100, 0, 30)
-BackToHome.Position = UDim2.new(0.5, -50, 0.4, 0)
-BackToHome.MouseButton1Click:Connect(function()
-    Window:SwitchTab("Home")
-end)
