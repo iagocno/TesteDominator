@@ -1,7 +1,7 @@
 if not game:IsLoaded() then game.Loaded:Wait() end
 if game.PlaceId == 15536298749 then
 
-    local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/iagocno/Dominator/refs/heads/main/source"))() -- Substitua pela URL correta da sua biblioteca
+    local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/iagocno/Dominator/main/source"))() -- Substitua pela URL correta da sua biblioteca
     local Window = lib:CreateWindow("Dominator UI")
 
     -- Criar as Abas
