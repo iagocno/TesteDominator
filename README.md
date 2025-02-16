@@ -1,33 +1,32 @@
--- Verifica se o GUI já está em execução
+-- Verifica se o GUI já está carregado
 if _G.DominatorUI_Loaded then
     return
 end
 _G.DominatorUI_Loaded = true
 
--- Carrega a biblioteca Dominator UI
+-- Carregar a biblioteca Dominator UI
 local DominatorLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/iagocno/Dominator/refs/heads/main/source"))()
 
--- Cria a janela principal
+-- Criar a interface principal
 local Window = DominatorLib:CreateWindow({
-    Name = "Dominator UI",
-    HidePremium = false,
-    SaveConfig = true,
-    ConfigFolder = "DominatorConfig"
+    Title = "Dominator UI",
+    Size = UDim2.new(0, 500, 0, 350), -- Define o tamanho do GUI
+    Position = UDim2.new(0.5, -250, 0.5, -175), -- Centraliza na tela
+    Draggable = true, -- Permite mover o GUI
+    CloseButton = true -- Ativa o botão de fechar
 })
 
--- Adiciona abas
+-- Criar abas (se for suportado)
 local HomeTab = Window:CreateTab("Home")
 local CreditsTab = Window:CreateTab("Créditos")
 local MainTab = Window:CreateTab("Main")
 
--- Adiciona seções e elementos na aba Home
-local HomeSection = HomeTab:CreateSection("Bem-vindo")
-HomeSection:CreateLabel("Bem-vindo ao Dominator UI!")
+-- Criar uma seção na aba "Home"
+local HomeSection = HomeTab:CreateSection("Bem-vindo ao Dominator UI")
+HomeSection:CreateLabel("Selecione uma opção abaixo:")
 
--- Adiciona seções e elementos na aba Créditos
-local CreditsSection = CreditsTab:CreateSection("Créditos")
-CreditsSection:CreateLabel("Desenvolvido por SeuNome")
-CreditsSection:CreateButton({
+-- Adicionar um botão de fechar GUI
+HomeSection:CreateButton({
     Name = "Fechar GUI",
     Callback = function()
         DominatorLib:Destroy()
@@ -35,34 +34,34 @@ CreditsSection:CreateButton({
     end
 })
 
--- Adiciona seções e elementos na aba Main
-local MainSection = MainTab:CreateSection("Funcionalidades")
+-- Criar uma seção na aba "Créditos"
+local CreditsSection = CreditsTab:CreateSection("Créditos")
+CreditsSection:CreateLabel("Feito por SeuNome")
+
+-- Criar uma seção na aba "Main"
+local MainSection = MainTab:CreateSection("Opções Principais")
+
+-- Adicionar um toggle (interruptor)
 MainSection:CreateToggle({
-    Name = "Ativar Função X",
+    Name = "Modo Turbo",
     Default = false,
     Callback = function(state)
         if state then
-            print("Função X ativada")
-            -- Código para ativar a função X
+            print("Modo Turbo ativado!")
         else
-            print("Função X desativada")
-            -- Código para desativar a função X
+            print("Modo Turbo desativado!")
         end
     end
 })
 
--- Torna a janela movível
-Window:MakeDraggable()
-
--- Função para destruir o GUI e interromper funções ativas
-function DestroyGUI()
-    DominatorLib:Destroy()
-    _G.DominatorUI_Loaded = false
-    -- Adicione aqui o código para interromper quaisquer funções em execução
-end
-
--- Adiciona o botão de destruir GUI na aba Home
-HomeSection:CreateButton({
-    Name = "Fechar GUI",
-    Callback = DestroyGUI
+-- Adicionar um slider (se suportado)
+MainSection:CreateSlider({
+    Name = "Velocidade",
+    Min = 0,
+    Max = 100,
+    Default = 50,
+    Callback = function(value)
+        print("Velocidade ajustada para:", value)
+    end
 })
+
