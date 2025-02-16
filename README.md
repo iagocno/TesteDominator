@@ -1,34 +1,68 @@
--- Dominator UI Library Example
+-- Verifica se o GUI já está em execução
+if _G.DominatorUI_Loaded then
+    return
+end
+_G.DominatorUI_Loaded = true
 
--- Certifique-se de carregar a biblioteca corretamente
-local Dominator = loadstring(game:HttpGet("https://raw.githubusercontent.com/iagocno/Dominator/refs/heads/main/source"))()
+-- Carrega a biblioteca Dominator UI
+local DominatorLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/iagocno/Dominator/refs/heads/main/source"))()
 
--- Criar a janela principal
-local Window = Dominator:CreateWindow("Dominator UI Test")
+-- Cria a janela principal
+local Window = DominatorLib:CreateWindow({
+    Name = "Dominator UI",
+    HidePremium = false,
+    SaveConfig = true,
+    ConfigFolder = "DominatorConfig"
+})
 
--- Criar as abas
-local Home = Window:NewTab("Home")
-local Main = Window:NewTab("Main")
-local Credits = Window:NewTab("Credits")
+-- Adiciona abas
+local HomeTab = Window:CreateTab("Home")
+local CreditsTab = Window:CreateTab("Créditos")
+local MainTab = Window:CreateTab("Main")
 
--- Adicionar seções às abas
-local Info = Home:AddSection("Informações do Jogador")
-local Features = Main:AddSection("Recursos")
-local About = Credits:AddSection("Créditos")
+-- Adiciona seções e elementos na aba Home
+local HomeSection = HomeTab:CreateSection("Bem-vindo")
+HomeSection:CreateLabel("Bem-vindo ao Dominator UI!")
 
--- Adicionar botões e elementos
-Info:AddButton("Nome do Jogador: " .. game.Players.LocalPlayer.Name, "Seu nome de usuário", function() end)
-Info:AddButton("ID: " .. game.Players.LocalPlayer.UserId, "Seu ID do Roblox", function() end)
-
-Features:AddToggle("Modo AFK", "Evita ser kickado", false, function(state)
-    if state then
-        game:GetService("Players").LocalPlayer.Idled:Connect(function()
-            game:GetService("VirtualUser"):CaptureController()
-            game:GetService("VirtualUser"):ClickButton2(Vector2.new())
-        end)
+-- Adiciona seções e elementos na aba Créditos
+local CreditsSection = CreditsTab:CreateSection("Créditos")
+CreditsSection:CreateLabel("Desenvolvido por SeuNome")
+CreditsSection:CreateButton({
+    Name = "Fechar GUI",
+    Callback = function()
+        DominatorLib:Destroy()
+        _G.DominatorUI_Loaded = false
     end
-end)
+})
 
-About:AddButton("Fechar GUI", "Fecha a interface", function()
-    Window:Destroy()
-end)
+-- Adiciona seções e elementos na aba Main
+local MainSection = MainTab:CreateSection("Funcionalidades")
+MainSection:CreateToggle({
+    Name = "Ativar Função X",
+    Default = false,
+    Callback = function(state)
+        if state then
+            print("Função X ativada")
+            -- Código para ativar a função X
+        else
+            print("Função X desativada")
+            -- Código para desativar a função X
+        end
+    end
+})
+
+-- Torna a janela movível
+Window:MakeDraggable()
+
+-- Função para destruir o GUI e interromper funções ativas
+function DestroyGUI()
+    DominatorLib:Destroy()
+    _G.DominatorUI_Loaded = false
+    -- Adicione aqui o código para interromper quaisquer funções em execução
+end
+
+-- Adiciona o botão de destruir GUI na aba Home
+HomeSection:CreateButton({
+    Name = "Fechar GUI",
+    Callback = DestroyGUI
+})
