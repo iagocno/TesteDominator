@@ -1,67 +1,58 @@
--- Verifica se o GUI já está carregado
-if _G.DominatorUI_Loaded then
-    return
-end
-_G.DominatorUI_Loaded = true
+if not game:IsLoaded() then game.Loaded:Wait() end
+if game.PlaceId == 15536298749 then
 
--- Carregar a biblioteca Dominator UI
-local DominatorLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/iagocno/Dominator/refs/heads/main/source"))()
-
--- Criar a interface principal
-local Window = DominatorLib:CreateWindow({
-    Title = "Dominator UI",
-    Size = UDim2.new(0, 500, 0, 350), -- Define o tamanho do GUI
-    Position = UDim2.new(0.5, -250, 0.5, -175), -- Centraliza na tela
-    Draggable = true, -- Permite mover o GUI
-    CloseButton = true -- Ativa o botão de fechar
-})
-
--- Criar abas (se for suportado)
-local HomeTab = Window:CreateTab("Home")
-local CreditsTab = Window:CreateTab("Créditos")
-local MainTab = Window:CreateTab("Main")
-
--- Criar uma seção na aba "Home"
-local HomeSection = HomeTab:CreateSection("Bem-vindo ao Dominator UI")
-HomeSection:CreateLabel("Selecione uma opção abaixo:")
-
--- Adicionar um botão de fechar GUI
-HomeSection:CreateButton({
-    Name = "Fechar GUI",
-    Callback = function()
-        DominatorLib:Destroy()
-        _G.DominatorUI_Loaded = false
-    end
-})
-
--- Criar uma seção na aba "Créditos"
-local CreditsSection = CreditsTab:CreateSection("Créditos")
-CreditsSection:CreateLabel("Feito por SeuNome")
-
--- Criar uma seção na aba "Main"
-local MainSection = MainTab:CreateSection("Opções Principais")
-
--- Adicionar um toggle (interruptor)
-MainSection:CreateToggle({
-    Name = "Modo Turbo",
-    Default = false,
-    Callback = function(state)
-        if state then
-            print("Modo Turbo ativado!")
-        else
-            print("Modo Turbo desativado!")
+    local cloneref = cloneref or function(...) return ... end
+    local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/iagocno/Dominator/refs/heads/main/source"))()
+    local VirtualUser = cloneref(game:GetService("VirtualUser"))
+    
+    -- Criar a Janela
+    local Window = lib:CreateWindow("Dominator UI")
+    
+    -- Criar as Abas
+    local Home = Window:NewTab("Home")
+    local AutoFarm = Window:NewTab("Auto Farm")
+    local Misc = Window:NewTab("Misc")
+    
+    -- Criar Seções dentro das Abas
+    local Info = Home:AddSection("Informações")
+    local Discord = Home:AddSection("Discord")
+    local Farm = AutoFarm:AddSection("Farm")
+    local Others = Misc:AddSection("Extras")
+    
+    -- Informações do jogador
+    Info:AddButton("Nome: " .. game.Players.LocalPlayer.Name, "Nome de Usuário", function() end)
+    Info:AddButton("ID: " .. game.Players.LocalPlayer.UserId, "ID do jogador", function() end)
+    Info:AddButton("Executor: " .. identifyexecutor(), "Executor usado", function() end)
+    
+    -- Botão de Discord
+    Discord:AddButton("Discord", "Entrar no servidor", function()
+        setclipboard("https://discord.gg/seuconvite")
+    end)
+    
+    -- Auto Collect Coins
+    Farm:AddToggle("Auto Collect Coins", "Coletar moedas automaticamente", false, function(state)
+        getgenv().AutoCollect = state
+        while getgenv().AutoCollect do
+            task.wait(0.1)
+            for _, v in pairs(workspace:GetDescendants()) do
+                if v.Name:lower() == "coins" and v:IsA("BasePart") then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
+                end
+            end
         end
-    end
-})
-
--- Adicionar um slider (se suportado)
-MainSection:CreateSlider({
-    Name = "Velocidade",
-    Min = 0,
-    Max = 100,
-    Default = 50,
-    Callback = function(value)
-        print("Velocidade ajustada para:", value)
-    end
-})
-
+    end)
+    
+    -- Anti AFK
+    Others:AddButton("AntiAFK", "Ativar", function()
+        game:GetService("Players").LocalPlayer.Idled:Connect(function()
+            VirtualUser:CaptureController()
+            VirtualUser:ClickButton2(Vector2.new())
+        end)
+    end)
+    
+    -- FPS Booster
+    Others:AddButton("FPS Booster", "Reduzir lag", function()
+        sethiddenproperty(game.Lighting, "Technology", 2)
+        game.Lighting.FogEnd = 9e9
+    end)
+end
