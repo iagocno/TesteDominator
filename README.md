@@ -1,21 +1,44 @@
+-- GUI Menu para testar Dominator Library
+-- Usando Orion UI e Fluxus UI
+
 local Dominator = loadstring(game:HttpGet("https://raw.githubusercontent.com/iagocno/Dominator/refs/heads/main/source"))()
 
--- Criando uma janela usando a Fluxus UI Lib
-local fluxusWindow = Dominator.createFluxusWindow("Janela Fluxus", Vector2.new(300, 200), Vector2.new(100, 100))
+-- Criar GUI Orion
+Dominator.CreateOrionGUI()
 
--- Adicionando um botão à janela Fluxus
-Dominator.addFluxusButton(fluxusWindow, "Clique Aqui", function()
-    print("Botão Fluxus clicado!")
-end)
+-- Criar GUI Fluxus
+Dominator.CreateFluxusGUI()
 
--- Criando uma janela usando a Orion Lib
-local orionWindow = Dominator.createOrionWindow("Janela Orion", Vector2.new(300, 200), Vector2.new(500, 100))
+-- Botões de teste para funcionalidades
+local Orion = loadstring(game:HttpGet("https://raw.githubusercontent.com/jensonhirst/Orion/main/source"))()
+local Window = Orion:MakeWindow({Name = "Dominator Test Hub", HidePremium = false, SaveConfig = false})
+local Tab = Window:MakeTab({Name = "Testes", Icon = "rbxassetid://4483345998", PremiumOnly = false})
 
--- Adicionando um botão à janela Orion
-Dominator.addOrionButton(orionWindow, "Clique Aqui", function()
-    print("Botão Orion clicado!")
-end)
+Tab:AddButton({
+    Name = "Teleportar ao Spawn",
+    Callback = function()
+        Dominator.TeleportTo(Vector3.new(0, 10, 0))
+    end
+})
 
--- Usando funções personalizadas
-Dominator.doSomethingCool()
-Dominator.advancedFeature()
+Tab:AddSlider({
+    Name = "Velocidade do Jogador",
+    Min = 16,
+    Max = 100,
+    Default = 16,
+    Callback = function(value)
+        Dominator.SetWalkSpeed(value)
+    end
+})
+
+Tab:AddSlider({
+    Name = "Poder do Pulo",
+    Min = 50,
+    Max = 500,
+    Default = 50,
+    Callback = function(value)
+        Dominator.SetJumpPower(value)
+    end
+})
+
+Orion:Init()
